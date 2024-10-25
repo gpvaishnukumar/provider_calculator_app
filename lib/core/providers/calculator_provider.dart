@@ -28,7 +28,13 @@ class CalculatorProvider extends ChangeNotifier {
       Expression exp = parser.parse(input);
       ContextModel contextModel = ContextModel();
       double eval = exp.evaluate(EvaluationType.REAL, contextModel);
-      _result = eval.toString();
+
+      // Remove trailing '.0' if the result is an integer
+      if (eval == eval.toInt()) {
+        _result = eval.toInt().toString();
+      } else {
+        _result = eval.toString();
+      }
     } catch (e) {
       _result = 'Error';
     }
