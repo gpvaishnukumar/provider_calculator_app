@@ -23,7 +23,7 @@ class CalculatorScreen extends StatelessWidget {
               crossAxisSpacing: 8.0,
               mainAxisSpacing: 8.0,
               children: [
-                'C', '<', '.','%',
+                'C', '<', '.', '%',
                 '7', '8', '9', '÷',
                 '4', '5', '6', '×',
                 '1', '2', '3', '-',
