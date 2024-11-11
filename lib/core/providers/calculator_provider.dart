@@ -17,9 +17,19 @@ class CalculatorProvider extends ChangeNotifier {
     } else if (value == '=') {
       calculateResult();
     } else {
-      _expression += value; // Append the value
+      // Prevent appending multiple operators consecutively
+      if (_expression.isNotEmpty && isOperator(value) && isOperator(_expression[_expression.length - 1])) {
+        // Replace last operator with the new one
+        _expression = _expression.substring(0, _expression.length - 1) + value;
+      } else {
+        _expression += value; // Append the value
+      }
     }
     notifyListeners();
+  }
+
+  bool isOperator(String value) {
+    return value == '+' || value == '-' || value == '×' || value == '÷';
   }
 
   void calculateResult() {
@@ -29,22 +39,25 @@ class CalculatorProvider extends ChangeNotifier {
         return;
       }
 
-      // Replace '÷' and '×' with operators
+      // Check if the expression ends with an operator and remove it
+      if (isOperator(_expression[_expression.length - 1])) {
+        _expression = _expression.substring(0, _expression.length - 1);
+      }
+
+      // Replace '÷' and '×' with proper operators
       String input = _expression.replaceAll('÷', '/').replaceAll('×', '*');
 
-      // Count the number of percentage signs
+      // Handle percentages: count and remove them from the expression
       int percentCount = _expression.length - _expression.replaceAll('%', '').length;
-
-      // Remove percentage signs for calculation
       input = input.replaceAll('%', '');
 
-      // Evaluate the expression
+      // Evaluate the expression using math_expressions package
       Parser parser = Parser();
       Expression exp = parser.parse(input);
       ContextModel contextModel = ContextModel();
       double eval = exp.evaluate(EvaluationType.REAL, contextModel);
 
-      // Apply percentage calculation for the number of percentage signs
+      // Apply percentage calculations (if any)
       if (percentCount > 0) {
         eval *= pow(0.01, percentCount); // Reduce by 1% for each '%'
       }

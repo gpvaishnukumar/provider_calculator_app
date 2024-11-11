@@ -9,24 +9,22 @@ class DisplayWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Consumer<CalculatorProvider>(
       builder: (context, provider, child) {
-        return Column(
-          crossAxisAlignment: CrossAxisAlignment.end,
-          children: [
-            Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Text(
+        return Padding( // Single padding for the entire column
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.end,
+            children: [
+              Text(
                 provider.expression,
                 style: const TextStyle(fontSize: 28, color: Colors.grey),
               ),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Text(
+              const SizedBox(height: 10), // Add spacing between expression and result
+              Text(
                 provider.result,
                 style: const TextStyle(fontSize: 48, fontWeight: FontWeight.bold),
               ),
-            ),
-          ],
+            ],
+          ),
         );
       },
     );
